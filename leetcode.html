@@ -2187,6 +2187,169 @@
    * @return {string}
    */
   var toHex = function (num) {
+    let resnum = 1;
+    let hex = "0123456789abcdef";
+    let res = "";
+    if (!num) return "0";
+    else {
+      while (num && resnum <= 8) {
+        res = hex[num & 0x0000f] + res;
+        num >>= 4;
+        resnum++;
+      }
+    }
+    return res;
+  };
+
+
+
+
+  // 409. 最长回文串
+  /**
+   * @param {string} s
+   * @return {number}
+   */
+  var longestPalindrome = function (s) {
+    if (!s.length) return 0
+    let arr = []
+    let result = 0
+    for (let i = 0; i < s.length; i++) {
+      let x = arr.indexOf(s[i])
+      if (x !== -1) {
+        arr.splice(x, 1)
+        result += 2
+      } else {
+        arr.push(s[i])
+      }
+    }
+    return result < s.length ? result + 1 : result
+  };
+
+
+
+
+
+  // 412. Fizz Buzz 
+  /**
+   * @param {number} n
+   * @return {string[]}
+   */
+  var fizzBuzz = function (n) {
+    let arr = []
+    for (let i = 1; i < n + 1; i++) {
+      if (i % 15 === 0) {
+        arr.push('FizzBuzz')
+      } else if (i % 5 === 0) {
+        arr.push('Buzz')
+      } else if (i % 3 === 0) {
+        arr.push('Fizz')
+      } else {
+        arr.push(String(i))
+      }
+    }
+    return arr
+  };
+
+
+
+
+  // 414. 第三大的数
+  /**
+   * @param {number[]} nums
+   * @return {number}
+   */
+  var thirdMax = function (nums) {
+    let arr = [...new Set(nums)]
+    arr = arr.sort((a, b) => b - a)
+    return arr.length > 2 ? arr[2] : arr[0]
+  };
+
+
+
+
+  // 415. 字符串相加
+  /**
+   * @param {string} num1
+   * @param {string} num2
+   * @return {string}
+   */
+  var addStrings = function (num1, num2) {
+    let i = num1.length - 1,
+      j = num2.length - 1,
+      add = 0;
+    const ans = [];
+    while (i >= 0 || j >= 0 || add != 0) {
+      const x = i >= 0 ? num1.charAt(i) - '0' : 0;
+      const y = j >= 0 ? num2.charAt(j) - '0' : 0;
+      const result = x + y + add;
+      ans.push(result % 10);
+      add = Math.floor(result / 10);
+      i -= 1;
+      j -= 1;
+    }
+    return ans.reverse().join('');
+  };
+
+
+
+
+
+  // 434. 字符串中的单词数
+  /**
+   * @param {string} s
+   * @return {number}
+   */
+  var countSegments = function (s) {
+    return s.split(' ').filter(item => item !== '').length
+  };
+
+
+
+
+
+  // 441. 排列硬币
+  /**
+   * @param {number} n
+   * @return {number}
+   */
+  var arrangeCoins = function (n) {
+    let count = 0
+    let x = 0
+    while (n > count) {
+      x++
+      count = count + x
+      if ((n - count - x - 1) < 0) {
+        break
+      }
+    }
+    return x
+
+    // if (n == 0) return 0;
+    // let left = 0;
+    // let right = n;
+    // while (left <= right) {
+    //   let mid = left + ((right - left) >> 1);
+    //   let costToFinishMid = (1 + mid) * mid / 2;
+    //   if (costToFinishMid == n) {
+    //     return mid;
+    //   } else if (costToFinishMid < n) {
+    //     left = mid + 1;
+    //   } else if (costToFinishMid > n) {
+    //     right = mid - 1;
+    //   }
+    // }
+    // return right;
+  };
+
+
+
+
+  // 448. 找到所有数组中消失的数字
+  /**
+   * @param {number[]} nums
+   * @return {number[]}
+   */
+  var findDisappearedNumbers = function (nums) {
 
   };
 </script>
