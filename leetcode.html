@@ -2350,6 +2350,158 @@
    * @return {number[]}
    */
   var findDisappearedNumbers = function (nums) {
+    let l = nums.length,
+      arr = []
+    for (let i = 0; i < l; i++) {
+      if (nums.indexOf(i + 1) === -1) {
+        arr.push(i + 1)
+      }
+    }
+    return arr
+  };
+
+
+
+
+  // 453. 最小操作次数使数组元素相等
+  /**
+   * @param {number[]} nums
+   * @return {number}
+   */
+  var minMoves = function (nums) {
+    let moves = 0;
+    for (let i = 0; i < nums.length; i++) {
+      moves += nums[i] - Math.min(...nums);
+    }
+    return moves;
+
+
+    // let moves = 0;
+    // for (let i = 0; i < nums.length; i++) {
+    //   moves += nums[i];
+    // }
+    // return moves - Math.min(...nums) * nums.length;
+  }
+
+
+
+
+  // 455. 分发饼干
+  /**
+   * @param {number[]} g
+   * @param {number[]} s
+   * @return {number}
+   */
+  var findContentChildren = function (g, s) {
+    let arrg = g.sort((a, b) => b - a),
+      arrs = s.sort((a, b) => b - a),
+      count = 0;
+    while (arrs.length || arrg.length) {
+      let v = arrs.shift()
+      while (arrg.length) {
+        if (v >= arrg.shift()) {
+          count++
+          break
+        }
+      }
+    }
+    return count
+  };
+
+
+
+
+
+  // 459. 重复的子字符串
+  /**
+   * @param {string} s
+   * @return {boolean}
+   */
+  var repeatedSubstringPattern = function (s) {
+    let s1 = (s + s).slice(1, -1);
+    return s1.indexOf(s) != -1;
+  };
+
+
+
+
+  // 461. 汉明距离
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @return {number}
+   */
+  var hammingDistance = function (x, y) {
+    // 异或
+    return (x ^ y).toString(2).replace(/0/g, '').length
+  };
+
+
+
+
+
+  // 463. 岛屿的周长
+  /**
+   * @param {number[][]} grid
+   * @return {number}
+   */
+  var islandPerimeter = function (grid) {
+    // let count = 0;
+
+    // for (let i = 0; i < grid.length; i++) {
+    //   count += 2 * continuous(grid[i]); // 行，有几个1（连续算1个）
+    //   // 正方形可以用这个
+    //   // count += 2 * continuous(grid.map(item => item[i])); // 列，有几个1（连续算1个）
+    // }
+    // for (let i = 0; i < grid[0].length; i++) {
+    //   count += 2 * continuous(grid.map(item => item[i])); // 列，有几个1（连续算1个）
+    // }
+
+    // function continuous(list) {
+    //   console.log('list为', list)
+    //   let c = 0,
+    //     _list = [...list];
+    //   while (_list.length) {
+    //     let v = _list.shift()
+    //     if (v && !_list[0]) {
+    //       c++
+    //     }
+    //   }
+    //   return c
+    // }
+    // return count
+
+
+
+    let land = 0; // 土地个数
+    let border = 0; // 接壤边界的条数
+
+    for (let i = 0; i < grid.length; i++) {
+      for (let j = 0; j < grid[0].length; j++) {
+        if (grid[i][j] == 1) {
+          land++;
+          if (i < grid.length - 1 && grid[i + 1][j] == 1) {
+            border++;
+          }
+          if (j < grid[0].length - 1 && grid[i][j + 1] == 1) {
+            border++;
+          }
+        }
+      }
+    }
+    return 4 * land - 2 * border;
+  };
+
+
+
+
+
+  // 476. 数字的补数
+  /**
+   * @param {number} num
+   * @return {number}
+   */
+  var findComplement = function (num) {
 
   };
 </script>
