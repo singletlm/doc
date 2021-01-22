@@ -2704,6 +2704,7 @@
    * @return {number[]}
    */
   var findMode = function (root) {
+    if (!root) return []
     let hashMap = {}
     let queue = [root]
     let maxCount = 0
@@ -2716,12 +2717,68 @@
         result = [k]
         maxCount = hashMap[k]
       } else if (hashMap[k] == maxCount) {
-        result = result.push(k)
+        result.push(k)
       }
       if (cur.left) queue.push(cur.left)
       if (cur.right) queue.push(cur.right)
     }
 
     return result
+
+
+    // let base = 0,
+    //   count = 0,
+    //   maxCount = 0;
+    // let answer = [];
+
+    // const update = (x) => {
+    //   if (x === base) {
+    //     ++count;
+    //   } else {
+    //     count = 1;
+    //     base = x;
+    //   }
+    //   if (count === maxCount) {
+    //     answer.push(base);
+    //   }
+    //   if (count > maxCount) {
+    //     maxCount = count;
+    //     answer = [base];
+    //   }
+    // }
+
+    // let cur = root,
+    //   pre = null;
+    // while (cur !== null) {
+    //   if (cur.left === null) {
+    //     update(cur.val);
+    //     cur = cur.right;
+    //     continue;
+    //   }
+    //   pre = cur.left;
+    //   while (pre.right !== null && pre.right !== cur) {
+    //     pre = pre.right;
+    //   }
+    //   if (pre.right === null) {
+    //     pre.right = cur;
+    //     cur = cur.left;
+    //   } else {
+    //     pre.right = null;
+    //     update(cur.val);
+    //     cur = cur.right;
+    //   }
+    // }
+    // return answer;
+
+  };
+
+
+
+  /**
+   * @param {number} num
+   * @return {string}
+   */
+  var convertToBase7 = function (num) {
+
   };
 </script>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <svg id="s"></svg>
+</body>
+</html>
+<script type="text/javascript">
+
+  function parseSVG(s) {
+    var div = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+    div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg">' + s + '</svg>';
+    var frag = document.createDocumentFragment();
+    while (div.firstChild.firstChild)
+      frag.appendChild(div.firstChild.firstChild);
+    return frag;
+  }
+
+  document.getElementById('s').appendChild(parseSVG(
+    '<circle cx="100" cy="50" r="40" stroke="black" stroke-width="2" fill="red" onmousedown="alert(\'hello\');"/>'
+  ));
+</script>

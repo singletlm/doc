@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=788e2e7f56dd2aca2c0bba67beb40b5b">
+  </script>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .wrap {
+      padding-top: 100px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 800px;
+      height: 600px;
+      margin: 0 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .pickerBox {
+      position: relative;
+      left: -220px;
+      top: 10px;
+      z-index: 2;
+    }
+    input {
+      width: 200px;
+      height: 35px;
+      line-height: 35px;
+      padding-left: 10px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    button {
+      width: 80px;
+      height: 35px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div>
+      <input id="localL" placeholder="经度" />
+      <input id="localR" placeholder="纬度" />
+      <button id="buttom">解析</button>
+    </div>
+    <div id="container" class="container"></div>
+    <div id="pickerBox" class="pickerBox">
+      <input id="pickerInput" placeholder="输入关键字选取地点" />
+      <div id="poiInfo"></div>
+    </div>
+  </div>
+</body>
+</html>
+<script src="//webapi.amap.com/ui/1.1/main.js?v=1.1.1"></script>
+<!-- 
+  1. 是否有我们需要的输入地址进行定位的组件(GIS坐标)
+  2. 是否能通过高德API获取某地址所属的市州/县区/街道位置,如果可以,我们系统就依赖高德的这部分基础数据
+  3. 高德API是否要收费,如果是免费的,有没有什么额度限制,我们部门是否购买有高德的收费服务(之前他们大屏和各种里面都有应用,这个要了解清楚)
+-->
+<script>
+  window.onload = function () {
+    let map = new AMap.Map('container', {
+      zoom: 11, // 级别
+      // resizeEnable: true // 定位到所在城市
+    })
+
+    // 定位
+    map.plugin('AMap.Geolocation', function() {
+      let geolocation = new AMap.Geolocation({
+        enableHighAccuracy: true,//是否使用高精度定位，默认:true
+        timeout: 10000, //超过10秒后停止定位，默认：无穷大
+        maximumAge: 0, //定位结果缓存0毫秒，默认：0
+        convert: true, //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+        showButton: true, //显示定位按钮，默认：true
+        buttonPosition: 'LB', //定位按钮停靠位置，默认：'LB'，左下角
+        buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+        showMarker: true, //定位成功后在定位到的位置显示点标记，默认：true
+        showCircle: true, //定位成功后用圆圈表示定位精度范围，默认：true
+        panToLocation: true, //定位成功后将定位到的位置作为地图中心点，默认：true
+        zoomToAccuracy:true //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+      })
+      map.addControl(geolocation);
+      geolocation.getCurrentPosition()
+      AMap.event.addListener(geolocation, 'complete', onComplete)
+      AMap.event.addListener(geolocation, 'error', onError)
+
+      function onComplete (data) {
+        // data是具体的定位信息
+        console.log(data)
+      }
+
+      function onError (data) {
+        // 定位出错
+        console.log(data)
+      }
+    })
+    // 加载ui组件
+    AMapUI.loadUI(['misc/PoiPicker'], function(PoiPicker) {
+      let poiPicker = new PoiPicker({
+        input: 'pickerInput'
+      });
+      //初始化poiPicker
+      poiPickerReady(poiPicker);
+    });
+
+    function poiPickerReady(poiPicker) {
+      window.poiPicker = poiPicker;
+      let marker = new AMap.Marker();
+      let infoWindow = new AMap.InfoWindow({
+        offset: new AMap.Pixel(0, -20)
+      });
+      //选取了某个POI
+      poiPicker.on('poiPicked', function(poiResult) {
+        var source = poiResult.source,
+        poi = poiResult.item,
+        info = {
+          source: source,
+          id: poi.id,
+          name: poi.name,
+          location: poi.location.toString(),
+          address: poi.address
+        };
+        marker.setMap(map);
+        infoWindow.setMap(map);
+        marker.setPosition(poi.location);
+        infoWindow.setPosition(poi.location);
+        infoWindow.setContent('POI信息:<pre>' + JSON.stringify(info, null, 2) + '</pre>');
+        infoWindow.open(map, marker.getPosition());
+      });
+      poiPicker.onCityReady(function() {
+        // poiPicker.suggest('美食');
+      });
+    }
+
+    let buttom = document.getElementById('buttom')
+    let localL = document.getElementById('localL')
+    let localR = document.getElementById('localR')
+    buttom.onclick = function () {
+      if(localL.value && localR.value) {
+        let lnglat = [localL.value, localR.value]
+        console.log(lnglat)
+        map.plugin('AMap.Geocoder', function() {
+          let geocoder = new AMap.Geocoder({})
+
+          // var lnglat = [112.997924, 28.138378]
+
+          geocoder.getAddress(lnglat, function(status, result) {
+            console.log('逆地址解析', status, result)
+            // if (status === 'complete' && result.info === 'OK') {
+            // // result为对应的地理位置详细信息
+            // }
+          })
+        })
+      }
+    }
+  }
+</script>

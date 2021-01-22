@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=8DnIYe1kEDyD18hzxUnbDEK31CXZ4PzR">
+  </script>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.20.0-0/axios.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .wrap {
+      padding-top: 100px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 800px;
+      height: 600px;
+      margin: 0 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pickerBox {
+      position: relative;
+      width: 200px;
+    }
+
+    input {
+      width: 200px;
+      height: 35px;
+      line-height: 35px;
+      padding-left: 10px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 80px;
+      height: 35px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div>
+      <input id="localL" placeholder="经度" />
+      <input id="localR" placeholder="纬度" />
+      <button id="buttom">解析</button>
+    </div>
+    <div id="container" class="container"></div>
+    <div id="pickerBox" class="pickerBox">
+      <input id="pickerInput" placeholder="输入关键字选取地点" />
+      <div id="poiInfo"></div>
+    </div>
+  </div>
+</body>
+
+</html>
+<script>
+  window.onload = function () {
+    let map = new BMap.Map('container', {
+      resizeEnable: true
+    })
+    map.enableScrollWheelZoom()
+    let geolocation = new BMap.Geolocation();
+    let geoc = new BMap.Geocoder();
+    // if (window.navigator.geolocation) {
+    //   window.navigator.geolocation.getCurrentPosition(res=>{
+    //     console.log(res)
+    //     alert(res)
+    //   },err=>{
+    //     let errData = {
+    //       1: '没权限',
+    //       2: '内部位置源返回内部错误。',
+    //       3: '定位超时'
+    //     }
+    //     alert(errData[err.code])
+    //     console.log(errData[err.code])
+    //   }, {
+    //     enableHighAccuracy: true,
+    //     timeout: 10000,
+    //     maximumAge: 0
+    //   })
+    // }
+
+
+
+
+    // 浏览器定位
+    geolocation.getCurrentPosition(function (res) {
+      if (this.getStatus() === BMAP_STATUS_SUCCESS) {
+        const {
+          point,
+          accuracy
+        } = res
+        // 创建点坐标
+        map.centerAndZoom(point, 15);
+        let marker = new BMap.Marker(point)
+        map.addOverlay(marker)
+      } else {
+        let errData = {
+          BMAP_STATUS_CITY_LIST: '城市列表',
+          BMAP_STATUS_UNKNOWN_LOCATION: '位置未知',
+          BMAP_STATUS_UNKNOWN_ROUTE: '导航未知',
+          BMAP_STATUS_INVALID_KEY: '非法秘钥',
+          BMAP_STATUS_INVALID_REQUEST: '非法请求',
+          BMAP_STATUS_PERMISSION_DENIED: '没权限',
+          BMAP_STATUS_SERVICE_UNAVAILABLE: '服务不可用',
+          BMAP_STATUS_TIMEOUT: '超时',
+        }
+        console.log(errData[res.code])
+      }
+    }, {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    })
+
+
+    function name(point) {
+      axios.get(
+        `http://api.map.baidu.com/geoconv/v1/?coords=${point.lng},${point.lat}&from=1&to=5&ak=8DnIYe1kEDyD18hzxUnbDEK31CXZ4PzR`
+      ).then(res => {
+        console.log(res)
+      }, err => {
+        console.log(err)
+      })
+    }
+
+
+    // 定位SDK辅助定位
+    // let point = new BMap.Point(116.331398,39.897445);
+    // map.centerAndZoom(point, 15);
+    // // 开启SDK辅助定位
+    // geolocation.enableSDKLocation();
+    // geolocation.getCurrentPosition(function(r){
+    //   if(this.getStatus() == BMAP_STATUS_SUCCESS){
+    //     console.log(r)
+    //     let mk = new BMap.Marker(r.point);
+    //     map.addOverlay(mk);
+    //     map.panTo(r.point);
+    //     alert('您的位置：'+r.point.lng+','+r.point.lat);
+    //   }
+    //   else {
+    //     alert('failed'+this.getStatus());
+    //   }
+    // });
+
+
+    let buttom = document.getElementById('buttom')
+    let localL = document.getElementById('localL')
+    let localR = document.getElementById('localR')
+    buttom.onclick = function () {
+      if (localL.value && localR.value) {
+        geoc.getLocation(new BMap.Point(localL.value, localR.value), function (rs) {
+          console.log(rs)
+          // let addComp = rs.addressComponents;
+          // alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+        });
+      }
+    }
+
+    let pickerBox = document.getElementById('pickerBox');
+    let ac = new BMap.Autocomplete({
+      "input": "pickerInput",
+      "location": map
+    });
+    ac.addEventListener('onhighlight', function (e) {
+      if (e.target && e.target.value) {
+        var _value = e.target.value;
+        let myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+        setPlace(myValue);
+      }
+    });
+
+    ac.addEventListener("onconfirm", function (e) {
+      if (e.item && e.item.value) {
+        var _value = e.item.value;
+        let myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+        setPlace(myValue);
+      }
+    });
+
+    function setPlace(myValue) {
+      map.clearOverlays(); //清除地图上所有覆盖物
+      function myFun() {
+        let pp = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
+        console.log(pp)
+        map.centerAndZoom(pp, 18);
+        map.addOverlay(new BMap.Marker(pp)); //添加标注
+      }
+      let local = new BMap.LocalSearch(map, { //智能搜索
+        onSearchComplete: myFun
+      });
+      local.search(myValue);
+    }
+  }
+</script>
