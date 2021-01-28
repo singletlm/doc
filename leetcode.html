@@ -2774,11 +2774,139 @@
 
 
 
+  // 504. 七进制数
   /**
    * @param {number} num
    * @return {string}
    */
   var convertToBase7 = function (num) {
+    return num.toString(7)
+
+    // if (num == 0) return '0';
+    // let str = '';
+    // let radix = 7;
+    // let isPositiveNum = true;
+    // if (num < 0) {
+    //   num = -num;
+    //   isPositiveNum = false;
+    // }
+    // while (num / radix !== 0) {
+    //   str = num % radix + str;
+    //   num = num / radix >> 0;
+    // }
+    // return isPositiveNum ? str : '-' + str;
+  };
+
+
+
+
+  // 506. 相对名次
+  /**
+   * @param {number[]} nums
+   * @return {string[]}
+   */
+  var findRelativeRanks = function (nums) {
+    if (nums.length < 0) return []
+    let sortArr = [...nums].sort((x, y) => y - x)
+    let arr = []
+    for (let i = 0; i < nums.length; i++) {
+      let x = sortArr.indexOf(nums[i])
+      switch (x) {
+        case 0:
+          arr.push('Gold Medal')
+          break;
+        case 1:
+          arr.push('Silver Medal')
+          break;
+        case 2:
+          arr.push('Bronze Medal')
+          break;
+        default:
+          arr.push((x + 1).toString())
+          break;
+      }
+    }
+    return arr
+  };
+
+
+
+  // 507. 完美数
+  /**
+   * @param {number} num
+   * @return {boolean}
+   */
+  var checkPerfectNumber = function (num) {
+    if (num < 2) return false
+    let arr = [1]
+    for (let i = 2; i <= Math.floor(num / 2); i++) {
+      if (num % i === 0) {
+        arr.push(i)
+      }
+    }
+    return num === arr.reduce((accumulator, currentValue) => accumulator + currentValue)
+  };
+
+
+
+
+
+  // 509. 斐波那契数
+  /**
+   * @param {number} n
+   * @return {number}
+   */
+  var fib = function (n) {
+    const fn = (n, a1 = 0, a2 = 1) => n < 1 ? a1 : fn(n - 1, a2, a1 + a2)
+    return fn(n)
+
+    // if (n < 2) {
+    //   return n;
+    // }
+    // let p = 0,
+    //   q = 0,
+    //   r = 1;
+    // for (let i = 2; i <= n; i++) {
+    //   p = q;
+    //   q = r;
+    //   r = p + q;
+    // }
+    // return r;
+
+  };
+
+
+
+  // 520. 检测大写字母
+  /**
+   * @param {string} word
+   * @return {boolean}
+   */
+  var detectCapitalUse = function (word) {
+    let str0 = word.charAt(0)
+    let str1 = word.charAt(1)
+    let first = str0 >= 'a' && str0 <= 'z' // 小写
+    let second = str1 >= 'a' && str1 <= 'z' // 小写
+    for (let i = 1; i < word.length; i++) {
+      let c = word.charAt(i);
+      let bool = c >= 'a' && c <= 'z'
+      if (first && !bool) return false
+      else if (!first && second && !bool) return false
+      else if (!first && !second && bool) return false
+    }
+    return true
+  };
+
+
+
+
+  // 521. 最长特殊序列 Ⅰ
+  /**
+   * @param {string} a
+   * @param {string} b
+   * @return {number}
+   */
+  var findLUSlength = function (a, b) {
 
   };
 </script>
