@@ -2890,9 +2890,12 @@
     for (let i = 1; i < word.length; i++) {
       let c = word.charAt(i);
       let bool = c >= 'a' && c <= 'z'
-      if (first && !bool) return false
-      else if (!first && second && !bool) return false
-      else if (!first && !second && bool) return false
+      if (first && !bool) return false // 小写-大写
+
+      else if (!first && second && !bool) return false // 大写-小写-大写
+      else if (!first && !second && bool) return false // 大写-大写-小写
+
+      // else if (!first && (second ^ bool)) return false
     }
     return true
   };
@@ -2907,6 +2910,68 @@
    * @return {number}
    */
   var findLUSlength = function (a, b) {
+    if (a == b) return -1
+    return Math.max(a.length, b.length)
+  };
 
+
+
+
+
+  // 530. 二叉搜索树的最小绝对差
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val) {
+   * this.val = val;
+   * this.left = this.right = null;
+   * }
+   */
+  /**
+   * @param {TreeNode} root
+   * @return {number}
+   */
+  var getMinimumDifference = function (root) {
+    let ans = Infinity,
+      pre = -1;
+    const dfs = (root) => {
+      if (root === null) {
+        return;
+      }
+      dfs(root.left);
+      if (pre == -1) {
+        pre = root.val;
+      } else {
+        ans = Math.min(ans, root.val - pre);
+        pre = root.val;
+      }
+      dfs(root.right);
+    }
+    dfs(root);
+    return ans;
+
+  };
+
+
+
+
+  // 541. 反转字符串 II
+  /**
+   * @param {string} s
+   * @param {number} k
+   * @return {string}
+   */
+  var reverseStr = function (s, k) {
+    if (k > s.length) return s.split('').reverse().join('')
+    let n = 0,
+      result = '';
+    for (let i = 0; i < s.length; i += k) {
+      let t = s.slice(i, i + k);
+      n++;
+      if (n % 2 === 1) {
+        t = t.split('').reverse().join('');
+      }
+      result += t;
+    }
+    return result;
   };
 </script>

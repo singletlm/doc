@@ -95,34 +95,8 @@ let prompList = [{
   name: 'pwd'
 }]
 
-function enter() {
-  return new Promise((resolve, reject) => {
-    inquirer
-      .prompt(prompList)
-      .then(answers => {
-        // console.log(JSON.stringify(answers))
-        // Use user feedback for... whatever!!
-        resolve(answers)
-      })
-      .catch(error => {
-        // error.isTtyError
-        console.log('错误')
-        reject()
-      });
-  })
-}
-
 const userForm = () => {
-  return new Promise((resolve, reject) => {
-    inquirer
-      .prompt(prompList)
-      .then(answers => {
-        resolve(answers)
-      })
-      .catch(error => {
-        reject('错误')
-      });
-  })
+  return inquirer.prompt(prompList)
 }
 
 module.exports = userForm
