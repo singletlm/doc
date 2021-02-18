@@ -2961,17 +2961,188 @@
    * @return {string}
    */
   var reverseStr = function (s, k) {
-    if (k > s.length) return s.split('').reverse().join('')
-    let n = 0,
-      result = '';
+    let result = '';
     for (let i = 0; i < s.length; i += k) {
       let t = s.slice(i, i + k);
-      n++;
-      if (n % 2 === 1) {
+      if ((i / k) % 2 === 0) {
         t = t.split('').reverse().join('');
       }
       result += t;
     }
     return result;
+  };
+
+
+
+  // 543. 二叉树的直径
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val) {
+   * this.val = val;
+   * this.left = this.right = null;
+   * }
+   */
+  /**
+   * @param {TreeNode} root
+   * @return {number}
+   */
+  var diameterOfBinaryTree = function (root) {
+    let ans = 1;
+
+    function depth(rootNode) {
+      if (!rootNode) {
+        return 0;
+      }
+      let L = depth(rootNode.left);
+      let R = depth(rootNode.right);
+      ans = Math.max(ans, L + R + 1);
+      return Math.max(L, R) + 1;
+    }
+    depth(root);
+    return ans - 1;
+  };
+
+
+
+
+  // 551. 学生出勤记录 I
+  /**
+   * @param {string} s
+   * @return {boolean}
+   */
+  var checkRecord = function (s) {
+    // A个数大于1,连续L个数大于2 false
+    let arr = s.split('')
+    let al = 0,
+      ll = 0;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === 'L') {
+        ll++
+        if (ll > 2) return false
+      } else {
+        ll = 0
+        if (arr[i] === 'A') {
+          al++
+          if (al > 1) return false
+        }
+      }
+    }
+    return true
+
+    // return !s.includes('LLL') && (s.indexOf('A') == s.lastIndexOf('A'))
+  };
+
+
+
+
+  // 557. 反转字符串中的单词 III
+  /**
+   * @param {string} s
+   * @return {string}
+   */
+  var reverseWords = function (s) {
+    return s.split(' ').map(i => i.split('').reverse().join('')).join(' ')
+  };
+
+
+
+
+
+  // 559. N 叉树的最大深度
+  /**
+   * // Definition for a Node.
+   * function Node(val,children) {
+   * this.val = val;
+   * this.children = children;
+   * };
+   */
+
+  /**
+   * @param {Node} root
+   * @return {number}
+   */
+  var maxDepth1 = function (root) {
+    if (!root) {
+      return 0;
+    } else {
+      let max = 0
+      if (root.children) {
+        for (let i = 0; i < root.children.length; i++) {
+          max = Math.max(maxDepth1(root.children[i]), max)
+        }
+      }
+      return max + 1;
+    }
+  };
+
+
+
+
+
+  // 561. 数组拆分 I
+  /**
+   * @param {number[]} nums
+   * @return {number}
+   */
+  var arrayPairSum = function (nums) {
+    nums.sort((a, b) => a - b)
+    return nums.reduce((c, i, idx) => idx % 2 == 0 ? c + i : c, 0)
+  };
+
+
+
+
+
+  // 563. 二叉树的坡度
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val, left, right) {
+   * this.val = (val===undefined ? 0 : val)
+   * this.left = (left===undefined ? null : left)
+   * this.right = (right===undefined ? null : right)
+   * }
+   */
+  /**
+   * @param {TreeNode} root
+   * @return {number}
+   */
+  var findTilt = function (root) {
+    let sum = 0
+
+    function deepRoot(_root) {
+      if (!_root) return 0
+      let l = deepRoot(_root.left)
+      let r = deepRoot(_root.right)
+      sum += Math.abs(l - r)
+      return l + r + _root.val
+    }
+    deepRoot(root)
+    return sum
+  };
+
+
+
+
+
+
+
+  // 566. 重塑矩阵
+  /**
+   * @param {number[][]} nums
+   * @param {number} r
+   * @param {number} c
+   * @return {number[][]}
+   */
+  var matrixReshape = function (nums, r, c) {
+    let _nums = nums.reduce((arr, item) => arr.concat(item), [])
+    if (r * c === _nums.length) {
+      let result = []
+      for (let i = 0; i < _nums.length; i += c) {
+        result.push(_nums.slice(i, i + c))
+      }
+      return result
+    } else {
+      return nums
+    }
   };
 </script>
