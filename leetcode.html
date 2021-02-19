@@ -3145,4 +3145,159 @@
       return nums
     }
   };
+
+
+
+
+
+
+
+  // 572. 另一个树的子树
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val, left, right) {
+   * this.val = (val===undefined ? 0 : val)
+   * this.left = (left===undefined ? null : left)
+   * this.right = (right===undefined ? null : right)
+   * }
+   */
+  /**
+   * @param {TreeNode} s
+   * @param {TreeNode} t
+   * @return {boolean}
+   */
+  var isSubtree = function (s, t) {
+
+    // 判断两树相等
+    function isSameTree(p, q) {
+      if (p == null && q == null) return true;
+      if (p == null || q == null) return false;
+      if (p.val != q.val) return false;
+      return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    };
+
+    let queue = [s]
+    while (queue.length) {
+      let node = queue.shift()
+      if (isSameTree(node, t)) return true
+      if (node.left) queue.push(node.left)
+      if (node.right) queue.push(node.right)
+    }
+
+    return false
+  };
+
+
+
+
+
+  // 575. 分糖果
+  /**
+   * @param {number[]} candyType
+   * @return {number}
+   */
+  var distributeCandies = function (candyType) {
+    return Math.min(new Set(candyType).size, candyType.length / 2)
+  };
+
+
+
+
+
+  // 589. N叉树的前序遍历
+  /**
+   * // Definition for a Node.
+   * function Node(val, children) {
+   * this.val = val;
+   * this.children = children;
+   * };
+   */
+
+  /**
+   * @param {Node} root
+   * @return {number[]}
+   */
+  var preorder = function (root) {
+    if (!root) return []
+
+    // 递归
+    // let result = [root.val]
+    // if (root.children?.length) {
+    //   result = result.concat(...root.children.map(i => preorder(i)))
+    // }
+    // return result
+
+    // 迭代
+    let queue = [root]
+    let result = []
+    while (queue.length) {
+      let node = queue.shift()
+      result.push(node.val)
+      if (node.children && node.children.length) {
+        queue.unshift(...node.children)
+      }
+    }
+    return result
+  }
+
+
+
+
+
+
+  // 590. N叉树的后序遍历
+  /**
+   * // Definition for a Node.
+   * function Node(val,children) {
+   * this.val = val;
+   * this.children = children;
+   * };
+   */
+
+  /**
+   * @param {Node} root
+   * @return {number[]}
+   */
+  var postorder = function (root) {
+    if (!root) return []
+
+    // 递归
+    // let result = []
+    // if (root.children?.length) {
+    //   result = result.concat(root.children.reduce((arr, item) => arr.concat(postorder(item)), []))
+    // }
+    // result.push(root.val)
+    // return result
+
+
+    // 迭代
+    let queue = [root]
+    let result = []
+    while (queue.length) {
+      let node = queue.pop()
+      if (node.children && node.children.length) {
+        queue = queue.concat(node.children)
+      }
+      result.unshift(node.val)
+    }
+    return result
+  };
+
+
+
+
+
+  // 594. 最长和谐子序列
+  /**
+   * @param {number[]} nums
+   * @return {number}
+   */
+  var findLHS = function (nums) {
+    let hashMap = {}
+    for (let i = 0; i < nums.length; i++) {
+      if (hashMap[nums[i]]) {
+
+      }
+    }
+  };
 </script>
