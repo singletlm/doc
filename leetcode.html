@@ -3294,10 +3294,121 @@
    */
   var findLHS = function (nums) {
     let hashMap = {}
+    let sum = 0
     for (let i = 0; i < nums.length; i++) {
-      if (hashMap[nums[i]]) {
+      hashMap[nums[i]] = hashMap[nums[i]] ? hashMap[nums[i]] + 1 : 1
+    }
 
+    for (const key in hashMap) {
+      if (hashMap.hasOwnProperty(Number(key) + 1)) {
+        sum = Math.max(sum, hashMap[key] + hashMap[Number(key) + 1])
       }
     }
+    return sum
+  };
+
+
+
+
+
+
+
+
+  // 598. 范围求和 II
+  /**
+   * @param {number} m
+   * @param {number} n
+   * @param {number[][]} ops
+   * @return {number}
+   */
+  var maxCount = function (m, n, ops) {
+    for (let i = 0; i < ops.length; i++) {
+      m = Math.min(m, ops[i][0])
+      n = Math.min(n, ops[i][1])
+    }
+
+    return m * n
+  };
+
+
+
+
+
+
+
+  // 599. 两个列表的最小索引总和
+  /**
+   * @param {string[]} list1
+   * @param {string[]} list2
+   * @return {string[]}
+   */
+  var findRestaurant = function (list1, list2) {
+    let result = [];
+    let sum = Infinity;
+
+    list2.forEach((item, i) => {
+      let idx = list1.indexOf(item)
+      if (idx != -1) {
+        if (idx + i < sum) {
+          sum = idx + i
+          result = [item]
+        } else if (idx + i == sum) {
+          result.push(item)
+        }
+      }
+    })
+    return result
+  };
+
+
+
+
+
+
+
+
+  // 605. 种花问题
+  /**
+   * @param {number[]} flowerbed
+   * @param {number} n
+   * @return {boolean}
+   */
+  var canPlaceFlowers = function (flowerbed, n) {
+    let c = 0
+    let list = flowerbed.join('').split('1')
+    if (list.length == 1) {
+      c = list[0].length % 2 == 0 ? list[0].length / 2 : (list[0].length + 1) / 2
+      return n <= c
+    }
+    for (let i = 0; i < list.length; i++) {
+      if (i == 0 || i == list.length - 1) {
+        c += Math.floor(list[i].length / 2)
+      } else if (list[i].length >= 3) {
+        c += Math.floor((list[i].length - 1) / 2)
+      }
+    }
+
+    return n <= c
+  };
+
+
+
+
+
+
+  // 606. 根据二叉树创建字符串
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val) {
+   * this.val = val;
+   * this.left = this.right = null;
+   * }
+   */
+  /**
+   * @param {TreeNode} t
+   * @return {string}
+   */
+  var tree2str = function (t) {
+
   };
 </script>
