@@ -32,7 +32,6 @@
       len = nums.length
     }
 
-    // 神仙操作
     // return nums.reduce((p, v, i, ar) => p[v] !== undefined && ar.splice(1) && [p[v], i] || (i === p['l'] ? [] : p[
     //   target -
     //   v] = i, p), {
@@ -3409,6 +3408,47 @@
    * @return {string}
    */
   var tree2str = function (t) {
+    function recur(node) {
+      if (!node) {
+        return ''
+      }
+      let str = `${node.val}`
+      if (!node.left && !node.right) {
+        return str
+      } else if (node.left && node.right) {
+        str = `${str}(${recur(node.left)})(${recur(node.right)})`
+      } else if (!node.left) {
+        str = `${str}()(${recur(node.right)})`
+      } else if (!node.right) {
+        str = `${str}(${recur(node.left)})`
+      }
+      return str
+    }
+
+    return recur(t)
+  };
+
+
+
+
+
+
+
+  // 617. 合并二叉树
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val, left, right) {
+   * this.val = (val===undefined ? 0 : val)
+   * this.left = (left===undefined ? null : left)
+   * this.right = (right===undefined ? null : right)
+   * }
+   */
+  /**
+   * @param {TreeNode} root1
+   * @param {TreeNode} root2
+   * @return {TreeNode}
+   */
+  var mergeTrees = function (root1, root2) {
 
   };
 </script>
