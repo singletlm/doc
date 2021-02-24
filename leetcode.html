@@ -66,6 +66,12 @@
    * @return {boolean}
    */
   var isPalindrome = function (x) {
+    // let l = 0,
+    //   r = s.length - 1;
+    // while (l < r && s[l] === s[r]) l++, r--;
+    // if (r <= l) return true;
+    // return false
+
     return x.toString().split("").reverse().join("") === x.toString()
   };
 
@@ -3780,6 +3786,179 @@
    * @return {number}
    */
   var findSecondMinimumValue = function (root) {
+    if (!root) return -1
+    let bool = false
+    let min = Infinity
+    let queue = []
+    root.left && queue.push(root.left)
+    root.right && queue.push(root.right)
+    while (queue.length) {
+      let n = queue.shift()
+      if (n.val > root.val) {
+        bool = true
+        min = Math.min(min, n.val)
+      } else {
+        n.left && queue.push(n.left)
+        n.right && queue.push(n.right)
+      }
+    }
+    return bool ? min : -1
+  };
 
+
+
+
+
+
+
+  // 674. 最长连续递增序列
+  /**
+   * @param {number[]} nums
+   * @return {number}
+   */
+  var findLengthOfLCIS = function (nums) {
+    if (nums.length == 0) return 0
+    let max = 1;
+    let count = 1
+    for (let i = 1; i < nums.length; i++) {
+      if (nums[i] > nums[i - 1]) {
+        count++
+      } else {
+        max = Math.max(max, count)
+        count = 1
+      }
+    }
+    return Math.max(max, count)
+  };
+
+
+
+
+
+
+
+  // 680. 验证回文字符串 Ⅱ
+  /**
+   * @param {string} s
+   * @return {boolean}
+   */
+  var validPalindrome = function (s, flag = true) {
+    let l = 0,
+      r = s.length - 1;
+    while (l < r && s[l] === s[r]) l++, r--;
+    if (r <= l) return true;
+    if (flag == true) {
+      return validPalindrome(s.slice(l, r), false) || validPalindrome(s.slice(l + 1, r + 1), false)
+    }
+    return false;
+  };
+
+
+
+
+
+
+  // 682. 棒球比赛
+  /**
+   * @param {string[]} ops
+   * @return {number}
+   */
+  var calPoints = function (ops) {
+    let resultList = []
+    for (let i = 0; i < ops.length; i++) {
+      if (ops[i] == '+') {
+        resultList.push(resultList[resultList.length - 1] + resultList[resultList.length - 2])
+      } else if (ops[i] == 'D') {
+        resultList.push(resultList[resultList.length - 1] * 2)
+      } else if (ops[i] == 'C') {
+        resultList.pop()
+      } else {
+        resultList.push(Number(ops[i]))
+      }
+    }
+    return resultList.reduce((c, i) => c + i, 0)
+  };
+
+
+
+
+
+
+  // 690. 员工的重要性
+  /**
+   * Definition for Employee.
+   * function Employee(id, importance, subordinates) {
+   * this.id = id;
+   * this.importance = importance;
+   * this.subordinates = subordinates;
+   * }
+   */
+
+  /**
+   * @param {Employee[]} employees  
+   * @param {number} id
+   * @return {number}
+   */
+  var GetImportance = function (employees, id) {
+    for (let i = 0; i < employees.length; i++) {
+      if (employees[i].id == id) {
+        let obj = employees.splice(i, 1)[0]
+        return obj.importance + obj.subordinates.reduce((c, item) => c + GetImportance(employees, item), 0)
+      }
+    }
+    return 0
+  };
+
+
+
+
+
+
+
+
+  // 693. 交替位二进制数
+  /**
+   * @param {number} n
+   * @return {boolean}
+   */
+  var hasAlternatingBits = function (n) {
+    let str = n.toString(2)
+    for (let i = 1; i < str.length; i++) {
+      if (!(str[i] ^ str[i - 1])) {
+        return false
+      }
+    }
+    return true
+  };
+
+
+
+
+
+
+  // 696. 计数二进制子串
+  /**
+   * @param {string} s
+   * @return {number}
+   */
+  var countBinarySubstrings = function (s) {
+
+    let ptr = 0,
+      n = s.length,
+      last = 0,
+      ans = 0;
+    while (ptr < n) {
+      const c = s.charAt(ptr);
+      let count = 0;
+      // 统计连续0（1）的个数
+      while (ptr < n && s.charAt(ptr) === c) {
+        ++ptr;
+        ++count;
+      }
+      // 当前连续0（1）的个数与前面连续1（0）的个数的最小值
+      ans += Math.min(count, last);
+      last = count;
+    }
+    return ans;
   };
 </script>
