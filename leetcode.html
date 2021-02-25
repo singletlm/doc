@@ -3961,4 +3961,68 @@
     }
     return ans;
   };
+
+
+
+
+
+
+  // 697. 数组的度
+  /**
+   * @param {number[]} nums
+   * @return {number}
+   */
+  var findShortestSubArray = function (nums) {
+    let hashMap = {}
+    for (let i = 0; i < nums.length; i++) {
+      if (hashMap.hasOwnProperty(nums[i])) {
+        hashMap[nums[i]].count = hashMap[nums[i]].count + 1
+        hashMap[nums[i]].distance = i - hashMap[nums[i]].first + 1
+      } else {
+        hashMap[nums[i]] = {
+          count: 1,
+          first: i,
+          distance: 1
+        }
+      }
+    }
+    let result = 0
+    let max = 0
+    for (const key in hashMap) {
+      if (hashMap[key].count > max) {
+        max = hashMap[key].count
+        result = hashMap[key].distance
+      } else if (hashMap[key].count == max) {
+        if (hashMap[key].distance < result) {
+          result = hashMap[key].distance
+        }
+      }
+    }
+    return result
+  }
+
+
+
+
+
+
+
+
+  // 700. 二叉搜索树中的搜索
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val, left, right) {
+   * this.val = (val===undefined ? 0 : val)
+   * this.left = (left===undefined ? null : left)
+   * this.right = (right===undefined ? null : right)
+   * }
+   */
+  /**
+   * @param {TreeNode} root
+   * @param {number} val
+   * @return {TreeNode}
+   */
+  var searchBST = function (root, val) {
+
+  };
 </script>
